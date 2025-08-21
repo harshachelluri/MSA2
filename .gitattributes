@@ -1,1 +1,2 @@
+*.dll filter=lfs diff=lfs merge=lfs -text
 program/LibreOffice/program/mergedlo.dll filter=lfs diff=lfs merge=lfs -text
