@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Company Information Form</title>
+  <!-- Include Flatpickr CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <!-- Include Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+      background: #f5f5f5;
+      font-family: Arial, sans-serif;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background-color: #f8f9fa;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .navbar a, .navbar button {
+      color: #007bff;
+      text-decoration: none;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .navbar a:hover, .navbar button:hover {
+      text-decoration: underline;
+    }
+
+    .navbar a[href*='logout']::before {
+      font-family: "Font Awesome 5 Free";
+      content: "\f2f5";
+      font-weight: 900;
+    }
+
+    .form-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 1200px;
+      box-sizing: border-box;
+      padding: 2rem;
+      flex-grow: 1;
+      margin: 0 auto;
+    }
+
+    .main-heading {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #2c3e50;
+      text-align: center;
+      margin-bottom: 1rem;
+      width: 100%;
+    }
+
+    .company-form {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      gap: 2.75rem;
+      box-sizing: border-box;
+      padding: 0.1rem 2rem;
+    }
+
+    .section {
+      border: 1px solid #ddd;
+      padding: 2rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    legend {
+      padding: 0 10px;
+      font-size: 1rem;
+      color: #2c3e50;
+      font-weight: 300;
+      position: absolute;
+      top: -1.5rem;
+      left: -0.6rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      column-gap: 15%;
+    }
+
+    .input-field,
+    .textarea-field,
+    .select-field {
+      padding: 0.55rem 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 0.375rem;
+      font-size: 0.7rem;
+      width: 100%;
+      box-sizing: border-box;
+      color: #2c3e50;
+      transition: border-color 0.2s ease;
+      background: #f2f2f2;
+    }
+
+    .input-field:focus,
+    .textarea-field:focus,
+    .select-field:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+
+    .textarea-field {
+      resize: vertical;
+      min-height: 4rem;
+    }
+
+    .select-field {
+      padding-right: 2rem;
+    }
+
+    .error {
+      color: red;
+      font-size: 0.75rem;
+      padding-top: 4px;
+    }
+
+    .input-field.invalid,
+    .textarea-field.invalid,
+    .select-field.invalid {
+      border-color: red;
+    }
+
+    .btn-add {
+      background-color: #2563eb;
+      color: white;
+      padding: 0.5rem 0.9rem;
+      border: none;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .btn-add:hover {
+      background-color: #1e4fcc;
+    }
+
+    .submit-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      padding-bottom: 2rem;
+    }
+
+    .cr-submit-btn {
+      background-color: #22c55e;
+      color: #fff;
+      padding: 0.6rem 1.8rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.2s ease;
+    }
+
+    .cr-submit-btn:hover {
+      background-color: #16a34a;
+    }
+
+    .clear-button {
+      background-color: #ef4444;
+      color: #fff;
+      padding: 0.6rem 1.8rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.2s ease;
+    }
+
+    .clear-button:hover {
+      background-color: #dc2626;
+    }
+
+    .signature-container {
+      display: flex;
+      gap: 8.2rem;
+      flex-wrap: nowrap;
+      align-items: flex-start;
+      width: 100%;
+      padding: 1rem 0;
+    }
+
+    .signature-box {
+      flex: 1;
+      min-width: 250px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 1rem;
+      border-radius: 0.375rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .signature-box label {
+      font-size: 0.8rem;
+      color: #2c3e50;
+      font-weight: 500;
+    }
+
+    .signature-box canvas {
+      background: #f9f9f9;
+      border-radius: 0.375rem;
+      border: 1px solid #ccc;
+      width: 100%;
+      height: 120px;
+      cursor: crosshair;
+    }
+
+    .signature-box input[type="file"] {
+      font-size: 0.7rem;
+    }
+
+    .clear-signature {
+      background-color: #6b7280;
+      color: #fff;
+      padding: 0.4rem 0.8rem;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      font-size: 0.7rem;
+      transition: background-color 0.2s ease;
+    }
+
+    .clear-signature:hover {
+      background-color: #4b5563;
+    }
+
+    .custom-select-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .custom-select-input {
+      cursor: pointer;
+      padding-right: 2rem;
+    }
+
+    .custom-select-wrapper::after {
+      content: '\25BC';
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.7rem;
+      color: #2c3e50;
+      pointer-events: none;
+    }
+
+    .Ariba-id {
+      width: 15%;
+      display: flex;
+      position: relative;
+      left: 84%;
+      top: 0.75rem;
+    }
+
+    .custom-select-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 0.375rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      max-height: 200px;
+      overflow-y: auto;
+      display: none;
+    }
+
+    .custom-select-option {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.7rem;
+      color: #2c3e50;
+      cursor: pointer;
+    }
+
+    .custom-select-option:hover {
+      background: #f0f0f0;
+    }
+
+    .alert {
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 0.375rem;
+    }
+
+    .alert-success {
+      background-color: #d4edda;
+      color: #155724;
+      animation: fadeOut 2s forwards;
+    }
+
+    @keyframes fadeOut {
+      0% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+
+    .alert-error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    @media (max-width: 768px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .signature-container {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .signature-box {
+        min-width: 100%;
+      }
+
+      .Ariba-id {
+        width: 100%;
+        left: 0;
+        top: 0;
+        margin-bottom: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div>
+      <a href="/">Home</a>
+    </div>
+    <div>
+      <a href="{{ url_for('logout') }}" aria-label="Log out">
+        Logout
+      </a>
+    </div>
+  </div>
+
+  <div class="Ariba-id">
+    <select id="aribaNetworkId" name="aribaNetworkId" class="input-field custom-select-input" aria-label="Ariba Network ID" onchange="fetchDomainData(this.value)">
+      <option value="">Select Ariba Network ID</option>
+      {% for ariba_id in ariba_network_ids %}
+        <option value="{{ ariba_id }}" {% if ariba_id == selected_ariba_id %}selected{% endif %}>{{ ariba_id }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="form-wrapper">
+    <h1 class="main-heading">Master Services Agreement Form</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ 'success' if category == 'success' else 'error' }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <form action="/submit" method="POST" class="company-form" id="MSAForm" enctype="multipart/form-data">
+      <fieldset class="section">
+        <legend>COMPANY DETAILS</legend>
+        <div class="grid-2">
+          <div>
+            <label for="name">Company Name*</label>
+            <input
+              id="name"
+              name="name"
+              placeholder="Company Name"
+              class="input-field"
+              value="{{ data.name }}"
+              aria-label="Company Name"
+              required
+            />
+            <div class="error" id="name-error"></div>
+          </div>
+
+          <div class="custom-select-wrapper">
+            <label for="businessType_display">Business Type*</label>
+            <input
+              id="businessType_display"
+              name="businessType_display"
+              placeholder="Business Type"
+              class="input-field custom-select-input"
+              value="{{ data.businessType }}"
+              onclick="toggleDropdown('businessType')"
+              aria-label="Business Type"
+            />
+            <input
+              type="hidden"
+              name="businessType"
+              id="businessType"
+              value="{{ data.businessType }}"
+            />
+            <div class="custom-select-dropdown" id="businessType_dropdown">
+              <div class="custom-select-option" data-value="Private">Private</div>
+              <div class="custom-select-option" data-value="Semi-Government">Semi-Government</div>
+              <div class="custom-select-option" data-value="Government">Government</div>
+              <div class="custom-select-option" data-value="Public">Public</div>
+              <div class="custom-select-option" data-value="Non-Profit">Non-Profit</div>
+            </div>
+            <div class="error" id="businessType-error"></div>
+          </div>
+
+          <div>
+            <label for="websiteUrl">Website URL*</label>
+            <input
+              id="websiteUrl"
+              name="websiteUrl"
+              placeholder="Website URL"
+              class="input-field"
+              value="{{ data.websiteUrl }}"
+              type="url"
+              aria-label="Website URL"
+              pattern="^(https?|ftp)://[^\s/$.?#].[^\s]*$"
+              required
+              oninput="validateUrl(this)"
+            />
+            <div class="error" id="websiteUrl-error"></div>
+          </div>
+
+          <div>
+            <label for="email">Email Address*</label>
+            <input
+              id="email"
+              name="email"
+              placeholder="Email Address"
+              class="input-field"
+              value="{{ data.email }}"
+              type="email"
+              aria-label="Email Address"
+              required
+            />
+            <div class="error" id="email-error"></div>
+          </div>
+
+          <div class="custom-select-wrapper">
+            <label for="industryType_display">Industry Type*</label>
+            <input
+              id="industryType_display"
+              name="industryType_display"
+              placeholder="Industry Type"
+              class="input-field custom-select-input"
+              value="{{ data.industryType }}"
+              onclick="toggleDropdown('industryType')"
+              aria-label="Industry Type"
+            />
+            <input
+              type="hidden"
+              name="industryType"
+              id="industryType"
+              value="{{ data.industryType }}"
+            />
+            <div class="custom-select-dropdown" id="industryType_dropdown">
+              <div class="custom-select-option" data-value="Pharmaceutical">Pharmaceutical</div>
+              <div class="custom-select-option" data-value="Manufacturing">Manufacturing</div>
+              <div class="custom-select-option" data-value="Retail">Retail</div>
+              <div class="custom-select-option" data-value="IT Services">IT Services</div>
+              <div class="custom-select-option" data-value="Automotive">Automotive</div>
+            </div>
+            <div class="error" id="industryType-error"></div>
+          </div>
+
+          <div>
+            <label for="registrationNumber">Company Registration No*</label>
+            <input
+              id="registrationNumber"
+              name="registrationNumber"
+              placeholder="Company Registration No"
+              class="input-field"
+              value="{{ data.registrationNumber }}"
+              aria-label="Company Registration Number"
+              required
+            />
+            <div class="error" id="registrationNumber-error"></div>
+          </div>
+
+          <div>
+            <label for="billingAddress">Billing Address*</label>
+            <input
+              id="billingAddress"
+              name="billingAddress"
+              placeholder="Billing Address"
+              class="input-field"
+              value="{{ data.billingAddress }}"
+              aria-label="Billing Address"
+              required
+            />
+            <div class="error" id="billingAddress-error"></div>
+          </div>
+
+          <div>
+            <label for="headquartersLocation">Location / Headquarters*</label>
+            <input
+              id="headquartersLocation"
+              name="headquartersLocation"
+              placeholder="Location / Headquarters"
+              class="input-field"
+              value="{{ data.headquartersLocation }}"
+              aria-label="Headquarters Location"
+              required
+            />
+            <div class="error" id="headquartersLocation-error"></div>
+          </div>
+
+          <div class="custom-select-wrapper">
+            <label for="countriesOfOperation_display">Countries of Operation*</label>
+            <input
+              id="countriesOfOperation_display"
+              name="countriesOfOperation_display"
+              placeholder="Countries of Operation"
+              class="input-field custom-select-input"
+              value="{{ data.countriesOfOperation }}"
+              onclick="toggleDropdown('countriesOfOperation')"
+              aria-label="Countries of Operation"
+            />
+            <input
+              type="hidden"
+              name="countriesOfOperation"
+              id="countriesOfOperation"
+              value="{{ data.countriesOfOperation }}"
+            />
+            <div class="custom-select-dropdown" id="countriesOfOperation_dropdown">
+              <div class="custom-select-option" data-value="India">India</div>
+              <div class="custom-select-option" data-value="United States">United States</div>
+              <div class="custom-select-option" data-value="Germany">Germany</div>
+              <div class="custom-select-option" data-value="Japan">Japan</div>
+              <div class="custom-select-option" data-value="Australia">Australia</div>
+            </div>
+            <div class="error" id="countriesOfOperation-error"></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="section">
+        <legend>AGREEMENT DETAILS</legend>
+        <div class="grid-2">
+          <div>
+            <label for="billing_contact_name">Billing Contact Name*</label>
+            <input
+              type="text"
+              id="billing_contact_name"
+              name="billing_contact_name"
+              placeholder="Billing Contact Name"
+              class="input-field"
+              value="{{ data.billing_contact_name }}"
+              aria-label="Billing Contact Name"
+              required
+            />
+            <div class="error" id="billing_contact_name-error"></div>
+          </div>
+
+          <div>
+            <label for="billing_email">Billing Email*</label>
+            <input
+              type="email"
+              id="billing_email"
+              name="billing_email"
+              placeholder="Billing Email"
+              class="input-field"
+              value="{{ data.billing_email }}"
+              aria-label="Billing Email"
+              pattern=".*@.*\..*"
+              required
+              oninput="validateEmail(this)"
+            />
+            <div class="error" id="billing_email-error"></div>
+          </div>
+
+          <div>
+            <label for="contact_person_designation">Contact Person Designation*</label>
+            <input
+              type="text"
+              id="contact_person_designation"
+              name="contact_person_designation"
+              placeholder="Contact Person Designation"
+              class="input-field"
+              value="{{ data.contact_person_designation }}"
+              aria-label="Contact Person Designation"
+              required
+            />
+            <div class="error" id="contact_person_designation-error"></div>
+          </div>
+
+          <div>
+            <label for="contact_person_number">Contact Person Number*</label>
+            <input
+              type="tel"
+              id="contact_person_number"
+              name="contact_person_number"
+              placeholder="Contact Person Number"
+              class="input-field"
+              value="{{ data.contact_person_number }}"
+              aria-label="Contact Person Number"
+              required
+            />
+            <div class="error" id="contact_person_number-error"></div>
+          </div>
+
+          <div>
+            <label for="business_license_number">Business License Number*</label>
+            <input
+              type="text"
+              id="business_license_number"
+              name="business_license_number"
+              placeholder="Business License Number"
+              class="input-field"
+              value="{{ data.business_license_number }}"
+              aria-label="Business License Number"
+              required
+            />
+            <div class="error" id="business_license_number-error"></div>
+          </div>
+
+          <div>
+            <label for="start_date">Start Date*</label>
+            <input
+              placeholder="Start Date (YYYY-MM-DD)"
+              class="input-field"
+              type="text"
+              id="start_date"
+              name="start_date"
+              value="{{ data.start_date }}"
+              aria-label="Start Date"
+              required
+            />
+            <div class="error" id="start_date-error"></div>
+          </div>
+
+          <div>
+            <label for="chervic_date">CAS Signature Date*</label>
+            <input
+              placeholder="CAS Signature Date (YYYY-MM-DD)"
+              class="input-field"
+              type="text"
+              id="chervic_date"
+              name="chervic_date"
+              value="{{ data.chervic_date }}"
+              aria-label="CAS Signature Date"
+              required
+            />
+            <div class="error" id="chervic_date-error"></div>
+          </div>
+
+          <div>
+            <label for="contact_person_sign_date">Contact Person Signature Date*</label>
+            <input
+              placeholder="Contact Person Signature Date (YYYY-MM-DD)"
+              class="input-field"
+              type="text"
+              id="contact_person_sign_date"
+              name="contact_person_sign_date"
+              value="{{ data.contact_person_sign_date }}"
+              aria-label="Contact Person Signature Date"
+              required
+            />
+            <div class="error" id="contact_person_sign_date-error"></div>
+          </div>
+
+          <div style="grid-column: span 2;">
+            <div class="signature-container">
+              <div class="signature-box">
+                <label for="chervic_signature">CAS Signature* (Draw or Upload):</label>
+                <canvas id="chervic_signature_canvas" width="300" height="120" aria-label="CAS Signature Canvas"></canvas>
+                <input
+                  type="hidden"
+                  id="chervic_signature_data"
+                  name="chervic_signature_data"
+                />
+                <input
+                  type="file"
+                  id="chervic_signature"
+                  name="chervic_signature"
+                  accept="image/png,image/jpeg"
+                  class="input-field"
+                  aria-label="Upload CAS Signature"
+                />
+                <button type="button" class="clear-signature" onclick="clearCanvas('chervic_signature_canvas')">Clear Signature</button>
+                {% if data.chervic_signature %}
+                  <img src="{{ url_for('static', filename=data.chervic_signature) }}" alt="CAS Signature" width="100">
+                {% endif %}
+                <div class="error" id="chervic_signature-error"></div>
+              </div>
+
+              <div class="signature-box">
+                <label for="contact_person_signature">Contact Person Signature* (Draw or Upload):</label>
+                <canvas id="contact_person_signature_canvas" width="300" height="120" aria-label="Contact Person Signature Canvas"></canvas>
+                <input
+                  type="hidden"
+                  id="contact_person_signature_data"
+                  name="contact_person_signature_data"
+                />
+                <input
+                  type="file"
+                  id="contact_person_signature"
+                  name="contact_person_signature"
+                  accept="image/png,image/jpeg"
+                  class="input-field"
+                  aria-label="Upload Contact Person Signature"
+                />
+                <button type="button" class="clear-signature" onclick="clearCanvas('contact_person_signature_canvas')">Clear Signature</button>
+                {% if data.contact_person_signature %}
+                  <img src="{{ url_for('static', filename=data.contact_person_signature) }}" alt="Contact Person Signature" width="100">
+                {% endif %}
+                <div class="error" id="contact_person_signature-error"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="submit-section">
+        <button type="submit" class="cr-submit-btn">Generate MSA</button>
+        <button type="button" class="clear-button" onclick="clearForm()">Clear All</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Include Flatpickr JS -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    // Debounce function to limit API calls
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Fetch domain data based on Ariba Network ID
+const fetchDomainData = debounce(function(aribaNetworkId) {
+    if (!aribaNetworkId) {
+        clearForm();
+        return;
+    }
+    fetch('/fetch_domain_data', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ aribaNetworkId: aribaNetworkId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.domain_data) {
+            document.querySelector('input[name="name"]').value = data.domain_data.name || '';
+            document.querySelector('input[name="websiteUrl"]').value = data.domain_data.websiteUrl || '';
+            document.querySelector('input[name="email"]').value = data.domain_data.email || '';
+            document.querySelector('input[name="registrationNumber"]').value = data.domain_data.registrationNumber || '';
+            document.querySelector('input[name="headquartersLocation"]').value = data.domain_data.headquartersLocation || '';
+            document.querySelector('input[name="countriesOfOperation_display"]').value = data.domain_data.countriesOfOperation || '';
+            document.querySelector('input[name="countriesOfOperation"]').value = data.domain_data.countriesOfOperation || '';
+            document.querySelector('input[name="businessType_display"]').value = data.domain_data.businessType || '';
+            document.querySelector('input[name="businessType"]').value = data.domain_data.businessType || '';
+            document.querySelector('input[name="industryType_display"]').value = data.domain_data.industryType || '';
+            document.querySelector('input[name="industryType"]').value = data.domain_data.industryType || '';
+            document.querySelector('input[name="billingAddress"]').value = data.domain_data.billingAddress || '';
+            document.querySelector('input[name="contact_person_designation"]').value = data.domain_data.contact_person_designation || '';
+            document.querySelector('input[name="contact_person_number"]').value = data.domain_data.contact_person_number || '';
+            document.querySelector('input[name="business_license_number"]').value = data.domain_data.business_license_number || '';
+        } else {
+            alert('No data found for the selected Ariba Network ID. Please enter details manually.');
+            clearForm();
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching domain data:', error);
+        alert('Error fetching domain data. Please try again.');
+    });
+}, 300);
+
+// Validate URL input
+function validateUrl(input) {
+    const errorDiv = document.getElementById('websiteUrl-error');
+    if (input.validity.valid) {
+        errorDiv.textContent = '';
+    } else {
+        errorDiv.textContent = 'Please enter a valid URL (e.g., http://example.com or https://example.com)';
+    }
+}
+
+// Validate email input
+function validateEmail(input) {
+    const errorDiv = document.getElementById('billing_email-error');
+    if (input.validity.valid) {
+        errorDiv.textContent = '';
+    } else {
+        errorDiv.textContent = 'Please enter a valid email address (e.g., example@microsoft.com, example@outlook.com, or example@gmail.com)';
+    }
+}
+
+// Document ready event listener
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize Flatpickr for date inputs
+    ['start_date', 'chervic_date', 'contact_person_sign_date'].forEach(id => {
+        flatpickr(`#${id}`, {
+            dateFormat: 'Y-m-d', // Enforce YYYY-MM-DD format
+            altInput: true,
+            altFormat: 'F j, Y', // Display format for user
+            allowInput: true, // Allow manual input
+            onChange: function(selectedDates, dateStr, instance) {
+                // Validate date format on change
+                const errorDiv = document.getElementById(`${id}-error`);
+                if (!dateStr || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+                    instance.element.classList.add('invalid');
+                    errorDiv.textContent = 'Please enter a valid date in YYYY-MM-DD format';
+                } else {
+                    instance.element.classList.remove('invalid');
+                    errorDiv.textContent = '';
+                }
+            },
+            onClose: function(selectedDates, dateStr, instance) {
+                // Ensure date is valid when picker closes
+                const errorDiv = document.getElementById(`${id}-error`);
+                if (!dateStr || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+                    instance.element.classList.add('invalid');
+                    errorDiv.textContent = 'Please enter a valid date in YYYY-MM-DD format';
+                } else {
+                    instance.element.classList.remove('invalid');
+                    errorDiv.textContent = '';
+                }
+            }
+        });
+    });
+
+    // Setup signature canvases
+    setupCanvas('chervic_signature_canvas', 'chervic_signature_data');
+    setupCanvas('contact_person_signature_canvas', 'contact_person_signature_data');
+    handleFileUpload('chervic_signature', 'chervic_signature_canvas', 'chervic_signature_data');
+    handleFileUpload('contact_person_signature', 'contact_person_signature_canvas', 'contact_person_signature_data');
+
+    // Setup custom dropdowns
+    setupCustomSelect('businessType');
+    setupCustomSelect('industryType');
+    setupCustomSelect('countriesOfOperation');
+
+    // Form validation on submit
+    document.getElementById('MSAForm').addEventListener('submit', (e) => {
+        let isValid = true;
+        const requiredFields = [
+            'name', 'businessType', 'websiteUrl', 'email', 'industryType',
+            'registrationNumber', 'billingAddress', 'headquartersLocation',
+            'countriesOfOperation', 'billing_contact_name', 'billing_email',
+            'contact_person_designation', 'contact_person_number', 'business_license_number',
+            'start_date', 'chervic_date', 'contact_person_sign_date'
+        ];
+
+        requiredFields.forEach(field => {
+            const input = document.querySelector(`[name="${field}"]`);
+            const errorDiv = document.getElementById(`${field}-error`);
+            if (!input.value.trim()) {
+                input.classList.add('invalid');
+                errorDiv.textContent = `${input.getAttribute('aria-label')} is required`;
+                isValid = false;
+            } else {
+                input.classList.remove('invalid');
+                errorDiv.textContent = '';
+            }
+        });
+
+        // Date format validation
+        const dateFields = ['start_date', 'chervic_date', 'contact_person_sign_date'];
+        dateFields.forEach(field => {
+            const input = document.getElementById(field);
+            const errorDiv = document.getElementById(`${field}-error`);
+            if (input.value && !/^\d{4}-\d{2}-\d{2}$/.test(input.value)) {
+                input.classList.add('invalid');
+                errorDiv.textContent = 'Please enter a valid date in YYYY-MM-DD format';
+                isValid = false;
+            } else if (!input.value) {
+                input.classList.add('invalid');
+                errorDiv.textContent = `${input.getAttribute('aria-label')} is required`;
+                isValid = false;
+            } else {
+                input.classList.remove('invalid');
+                errorDiv.textContent = '';
+            }
+        });
+
+        // Contact person number validation
+        const contactNumber = document.getElementById('contact_person_number');
+        const contactNumberError = document.getElementById('contact_person_number-error');
+        if (contactNumber.value && !/^\+?[1-9]\d{1,14}$/.test(contactNumber.value)) {
+            contactNumber.classList.add('invalid');
+            contactNumberError.textContent = 'Invalid phone number format';
+            isValid = false;
+        } else if (!contactNumber.value) {
+            contactNumber.classList.add('invalid');
+            contactNumberError.textContent = 'Contact Person Number is required';
+            isValid = false;
+        } else {
+            contactNumber.classList.remove('invalid');
+            contactNumberError.textContent = '';
+        }
+
+        // Signature validation
+        const chervicSig = document.getElementById('chervic_signature_data').value;
+        const contactPersonSig = document.getElementById('contact_person_signature_data').value;
+        const chervicFile = document.getElementById('chervic_signature').files.length;
+        const contactPersonFile = document.getElementById('contact_person_signature').files.length;
+        const chervicError = document.getElementById('chervic_signature-error');
+        const contactPersonError = document.getElementById('contact_person_signature-error');
+
+        if (!chervicSig && !chervicFile) {
+            chervicError.textContent = 'CAS Signature is required';
+            isValid = false;
+        } else {
+            chervicError.textContent = '';
+        }
+
+        if (!contactPersonSig && !contactPersonFile) {
+            contactPersonError.textContent = 'Contact Person Signature is required';
+            isValid = false;
+        } else {
+            contactPersonError.textContent = '';
+        }
+
+        if (!isValid) {
+            e.preventDefault();
+            alert('Please fill in all required fields and ensure valid formats.');
+        }
+    });
+});
+
+// Toggle custom dropdown visibility
+function toggleDropdown(fieldId) {
+    const dropdown = document.getElementById(`${fieldId}_dropdown`);
+    if (dropdown.style.display === 'block') {
+        dropdown.style.display = 'none';
+    } else {
+        document.querySelectorAll('.custom-select-dropdown').forEach(dd => {
+            dd.style.display = 'none';
+        });
+        dropdown.style.display = 'block';
+    }
+}
+
+// Setup custom select dropdowns
+function setupCustomSelect(fieldId) {
+    const dropdown = document.getElementById(`${fieldId}_dropdown`);
+    const displayInput = document.querySelector(`input[name="${fieldId}_display"]`);
+    const hiddenInput = document.getElementById(fieldId);
+    const options = dropdown.querySelectorAll('.custom-select-option');
+
+    options.forEach(option => {
+        option.addEventListener('click', () => {
+            displayInput.value = option.textContent;
+            hiddenInput.value = option.getAttribute('data-value');
+            dropdown.style.display = 'none';
+            document.getElementById(`${fieldId}-error`).textContent = '';
+            displayInput.classList.remove('invalid');
+        });
+    });
+
+    document.addEventListener('click', (e) => {
+        const wrapper = document.querySelector(`#${fieldId}_dropdown`).parentElement;
+        if (!wrapper.contains(e.target)) {
+            dropdown.style.display = 'none';
+        }
+    });
+}
+
+// Setup signature canvas
+function setupCanvas(canvasId, dataInputId) {
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+
+    ctx.strokeStyle = '#2c3e50';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    function getMousePos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        if (e.type.startsWith('touch')) {
+            return {
+                x: (e.touches[0].clientX - rect.left) * scaleX,
+                y: (e.touches[0].clientY - rect.top) * scaleY
+            };
+        }
+        return {
+            x: (e.clientX - rect.left) * scaleX,
+            y: (e.clientY - rect.top) * scaleY
+        };
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+        isDrawing = true;
+        const pos = getMousePos(e);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+        e.preventDefault();
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        if (isDrawing) {
+            const pos = getMousePos(e);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            document.getElementById(dataInputId).value = canvas.toDataURL('image/png', 0.7);
+        }
+    });
+
+    canvas.addEventListener('mouseup', () => {
+        isDrawing = false;
+        ctx.closePath();
+        document.getElementById(dataInputId).value = canvas.toDataURL('image/png', 0.7);
+        document.getElementById(`${canvasId.replace('_canvas', '')}-error`).textContent = '';
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+        isDrawing = false;
+        ctx.closePath();
+    });
+
+    canvas.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        isDrawing = true;
+        const pos = getMousePos(e);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+    });
+
+    canvas.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        if (isDrawing) {
+            const pos = getMousePos(e);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            document.getElementById(dataInputId).value = canvas.toDataURL('image/png', 0.7);
+        }
+    });
+
+    canvas.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        isDrawing = false;
+        ctx.closePath();
+        document.getElementById(dataInputId).value = canvas.toDataURL('image/png', 0.7);
+        document.getElementById(`${canvasId.replace('_canvas', '')}-error`).textContent = '';
+    });
+}
+
+// Clear signature canvas
+function clearCanvas(canvasId) {
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const dataInputId = canvasId.replace('_canvas', '_data');
+    document.getElementById(dataInputId).value = '';
+    document.getElementById(`${canvasId.replace('_canvas', '')}-error`).textContent = '';
+}
+
+// Handle file upload for signatures
+function handleFileUpload(inputId, canvasId, dataInputId) {
+    const input = document.getElementById(inputId);
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext('2d');
+
+    input.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const img = new Image();
+            img.onload = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const aspectRatio = img.width / img.height;
+                let drawWidth = canvas.width;
+                let drawHeight = canvas.height;
+                if (aspectRatio > canvas.width / canvas.height) {
+                    drawHeight = canvas.width / aspectRatio;
+                } else {
+                    drawWidth = canvas.height * aspectRatio;
+                }
+                ctx.drawImage(img, 0, 0, drawWidth, drawHeight);
+                document.getElementById(dataInputId).value = canvas.toDataURL('image/png', 0.7);
+                document.getElementById(`${inputId}-error`).textContent = '';
+                URL.revokeObjectURL(img.src);
+            };
+            img.onerror = () => {
+                alert('Failed to load image. Please try a different file.');
+            };
+            img.src = URL.createObjectURL(file);
+        }
+    });
+}
+
+// Clear entire form
+function clearForm() {
+    const form = document.getElementById('MSAForm');
+    form.querySelectorAll('input[type="text"], input[type="email"], input[type="url"], input[type="tel"], input.custom-select-input').forEach(input => {
+        if (input.name !== 'aribaNetworkId') {
+            input.value = '';
+            input.classList.remove('invalid');
+            const errorDiv = document.getElementById(`${input.name}-error`);
+            if (errorDiv) errorDiv.textContent = '';
+        }
+    });
+    form.querySelectorAll('input[type="hidden"][id="businessType"], input[type="hidden"][id="industryType"], input[type="hidden"][id="countriesOfOperation"]').forEach(input => {
+        input.value = '';
+        const errorDiv = document.getElementById(`${input.id}-error`);
+        if (errorDiv) errorDiv.textContent = '';
+    });
+    form.querySelectorAll('input[type="file"]').forEach(input => {
+        input.value = '';
+        const errorDiv = document.getElementById(`${input.id}-error`);
+        if (errorDiv) errorDiv.textContent = '';
+    });
+    const canvases = ['chervic_signature_canvas', 'contact_person_signature_canvas'];
+    canvases.forEach(id => {
+        clearCanvas(id);
+    });
+    ['start_date', 'chervic_date', 'contact_person_sign_date'].forEach(id => {
+        flatpickr(`#${id}`, {}).clear();
+        document.getElementById(`${id}-error`).textContent = '';
+    });
+}
+  </script>
+</body>
+</html>
