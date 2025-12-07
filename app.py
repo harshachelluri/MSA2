@@ -16,7 +16,7 @@ from docx.oxml import OxmlElement
 from flask import Flask, jsonify, request, render_template, redirect, url_for, flash, session, send_file
 from werkzeug.utils import secure_filename
 from html import escape
-import shutil
+import shutil  
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = os.getenv('FLASK_SECRET_KEY', 'your-secret-key')
